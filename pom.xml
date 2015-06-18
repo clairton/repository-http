@@ -2,7 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.eti.clairton</groupId>
   <artifactId>repository-vraptor</artifactId>
-  <version>0.1.0-SNAPSHOT</version>	<scm>
+  <version>0.1.0</version>
+  	<scm>
 		<connection>scm:git:git@github.com:clairton/repository-vraptor.git</connection>
 		<url>scm:git:git@github.com:clairton/repository-vraptor.git</url>
 		<developerConnection>scm:git:git@github.com:clairton/repository-vraptor.git</developerConnection>
