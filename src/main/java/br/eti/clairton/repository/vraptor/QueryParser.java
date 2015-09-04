@@ -50,15 +50,13 @@ public class QueryParser {
 	}
 
 	@Inject
-	public QueryParser(final AttributeBuilder attributeBuilder,
-			final Converters converters) {
+	public QueryParser(final AttributeBuilder attributeBuilder, final Converters converters) {
 		super();
 		this.builder = attributeBuilder;
 		this.converters = converters;
 	}
 
-	public Collection<Predicate> parse(final ServletRequest request,
-			final Class<? extends Model> modelType) {
+	public Collection<Predicate> parse(final ServletRequest request, final Class<? extends Model> modelType) {
 		final Collection<Predicate> predicates = new ArrayList<Predicate>();
 		final Enumeration<String> parameters = request.getParameterNames();
 		while (parameters.hasMoreElements()) {
@@ -78,8 +76,7 @@ public class QueryParser {
 		return predicates;
 	}
 	
-	public List<Order> order(final ServletRequest request,
-			final Class<? extends Model> modelType){
+	public List<Order> order(final ServletRequest request, final Class<? extends Model> modelType){
 		final Map<String, String[]> params;
 		if (request.getParameterMap() != null) {
 			params = request.getParameterMap();
@@ -114,8 +111,7 @@ public class QueryParser {
 		return orders;
 	}
 
-	public Page paginate(final ServletRequest request,
-			final Class<? extends Model> modelType) {
+	public Page paginate(final ServletRequest request, final Class<? extends Model> modelType) {
 		final Map<String, String[]> params;
 		if (request.getParameterMap() != null) {
 			params = request.getParameterMap();
@@ -138,8 +134,7 @@ public class QueryParser {
 		if (values.length == 1) {
 			for (final Comparator c : Comparators.values()) {
 				final String string = values[0];
-				final String value = escaper.matcher(c.toString()).replaceAll(
-						"\\\\$1");
+				final String value = escaper.matcher(c.toString()).replaceAll("\\\\$1");
 				final String regex = "^" + value + ".*";
 				logger.debug(regex);
 				if (string.matches(regex)) {
@@ -152,7 +147,7 @@ public class QueryParser {
 		}
 	}
 
-	private <T> Predicate to(final Attribute<?, ?>[] attrs, final String[] value) {
+	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String[] value) {
 		final Attribute<?, ?> lastAttr = attrs[attrs.length - 1];
 		@SuppressWarnings("unchecked")
 		final Class<T> type = (Class<T>) lastAttr.getJavaType();
