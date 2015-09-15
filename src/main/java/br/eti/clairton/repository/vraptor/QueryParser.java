@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -64,14 +65,14 @@ public class QueryParser {
 			if (query.contains(field) || "format".equals(field)) {
 				continue;
 			}
-			final Predicate predicate;
+			final Collection<Predicate> predicate;
 			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
 			if(attrs.length == 1 && attrs[0] == null){
 				continue;
 			}
 			final String[] values = request.getParameterValues(field);
 			predicate = to(attrs, values);
-			predicates.add(predicate);
+			predicates.addAll(predicate);
 		}
 		return predicates;
 	}
@@ -129,6 +130,18 @@ public class QueryParser {
 		}
 		return new Page(page, perPage);
 	}
+	
+	protected Record to(final String value) {
+		for (final Comparator c : Comparators.values()) {
+			final String expression = escaper.matcher(c.toString()).replaceAll("\\\\$1");
+			final String regex = "^" + expression + ".*";
+			logger.debug(regex);
+			if (value.matches(regex)) {
+				return new Record(value.replaceAll(expression, ""), c);
+			}
+		}
+		return new Record(value, Comparators.EQUAL);
+	}
 
 	protected Record to(final String[] values) {
 		if (values.length == 1) {
@@ -146,28 +159,41 @@ public class QueryParser {
 			return new Record(values, Comparators.EQUAL);
 		}
 	}
+	
 
-	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String[] value) {
+	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
 		final Attribute<?, ?> lastAttr = attrs[attrs.length - 1];
 		@SuppressWarnings("unchecked")
 		final Class<T> type = (Class<T>) lastAttr.getJavaType();
 		final Converter<T> converter = converters.to(type);
 		final Record record = to(value);
-		final Object object;
-		final Comparator comparator;
-		if (value.length > 1) {
-			final List<T> a = new ArrayList<T>();
-			for (final String s : value) {
-				a.add(converter.convert(s, type));
-			}
-			object = a;
-			comparator = Comparators.LIKE;
-		} else {
-			object = converter.convert(record.value.toString(), type);
-			comparator = record.comparator;
-		}
+		final Object object = converter.convert(record.value.toString(), type);
+		final Comparator comparator = record.comparator;
 		final Predicate predicate = new Predicate(object, comparator, attrs);
 		return predicate;
+	}
+	
+
+	protected <T> Collection<Predicate> to(final Attribute<?, ?>[] attrs, final String[] value) {
+		if (value.length > 1) {
+			final List<Predicate> predicates = new ArrayList<>();
+			for (final String s : value) {
+				final Predicate predicate = to(attrs, s);
+				predicates.add(predicate);				
+			}
+			//verificar se todas as comparações são iguais, significa que deve ser um like
+			if(predicates.stream().filter(p -> p.getComparator().equals(Comparators.EQUAL)).count() == Long.valueOf(predicates.size())){
+				final Attribute<?, ?>[] attributes = predicates.get(0).getAttributes();
+				final List<?> values = predicates.stream().map(p -> p.getValue()).collect(Collectors.toList());
+				final Comparator comparator = Comparators.LIKE;
+				final Predicate predicate = new Predicate(values,comparator, attributes);
+				return Arrays.asList(predicate);
+			}			
+			return predicates;
+		} else {
+			final Predicate predicate = to(attrs, value[0]);
+			return Arrays.asList(predicate);
+		}
 	}
 
 }

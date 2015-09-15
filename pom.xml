@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.eti.clairton</groupId>
   <artifactId>repository-vraptor</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
   	<scm>
 		<connection>scm:git:git@github.com:clairton/repository-vraptor.git</connection>
 		<url>scm:git:git@github.com:clairton/repository-vraptor.git</url>
@@ -208,8 +208,8 @@
 				<version>3.3</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

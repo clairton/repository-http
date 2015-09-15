@@ -18,10 +18,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import br.eti.clairton.repository.Comparators;
 import br.eti.clairton.repository.Order;
-import br.eti.clairton.repository.Predicate;
 import br.eti.clairton.repository.Order.Type;
-import br.eti.clairton.repository.vraptor.QueryParser;
-import br.eti.clairton.repository.vraptor.VRaptorRunner;
+import br.eti.clairton.repository.Predicate;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {
@@ -40,14 +38,13 @@ public class QueryParserTest {
 		// nome[]=remove&nome[]=update
 		final String[] values = new String[] { "remove", "update" };
 		request.addParameter("nome", values);
-		final Collection<Predicate> predicates = queryParser.parse(request,
-				Recurso.class);
+		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
 		assertEquals(1, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
-		final Predicate predicateNome = interator.next();
-		assertEquals(Arrays.asList(values), predicateNome.getValue());
-		assertEquals("*", predicateNome.getComparator().toString());
-		assertEquals("nome", predicateNome.getAttribute().getName());
+		final Predicate predicateRemove = interator.next();
+		assertEquals(Arrays.asList(values), predicateRemove.getValue());
+		assertEquals("*", predicateRemove.getComparator().toString());
+		assertEquals("nome", predicateRemove.getAttribute().getName());
 	}
 
 	@Test
@@ -64,11 +61,30 @@ public class QueryParserTest {
 	}
 
 	@Test
+	public void testArray() {
+		request.addParameter("id[]", new String[]{">=0", "<>100", "<1000"});
+		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		assertEquals(3, predicates.size());
+		final Iterator<Predicate> interator = predicates.iterator();
+		final Predicate predicateMaiorQueZero = interator.next();
+		assertEquals(">=", predicateMaiorQueZero.getComparator().toString());
+		assertEquals(Long.valueOf(0), predicateMaiorQueZero.getValue());
+		assertTrue(Recurso_.id.equals(predicateMaiorQueZero.getAttributes()[0]));
+		final Predicate predicateDiferenteDe100 = interator.next();
+		assertEquals(Long.valueOf(100), predicateDiferenteDe100.getValue());
+		assertEquals("<>", predicateDiferenteDe100.getComparator().toString());
+		assertTrue(Recurso_.id.equals(predicateDiferenteDe100.getAttributes()[0]));
+		final Predicate predicateMenorQuer1000 = interator.next();
+		assertEquals(Long.valueOf(1000), predicateMenorQuer1000.getValue());
+		assertEquals("<", predicateMenorQuer1000.getComparator().toString());
+		assertTrue(Recurso_.id.equals(predicateMenorQuer1000.getAttributes()[0]));
+	}
+
+	@Test
 	public void testParseComplex() {
 		request.addParameter("aplicacao.nome", "=*Pass");
 		request.addParameter("aplicacao.id", ">=0");
-		final Collection<Predicate> predicates = queryParser.parse(request,
-				Recurso.class);
+		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
 		assertEquals(2, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateNome = interator.next();
@@ -88,8 +104,7 @@ public class QueryParserTest {
 		// nome=Pass&id=>=0
 		request.addParameter("nome", "=*Pass");
 		request.addParameter("id", ">=0");
-		final Collection<Predicate> predicates = queryParser.parse(request,
-				Aplicacao.class);
+		final Collection<Predicate> predicates = queryParser.parse(request, Aplicacao.class);
 		assertEquals(2, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateNome = interator.next();
@@ -104,67 +119,56 @@ public class QueryParserTest {
 
 	@Test
 	public void testIgual() {
-		assertEquals(Comparators.EQUAL,
-				queryParser.to(new String[] { "abc" }).comparator);
+		assertEquals(Comparators.EQUAL, queryParser.to("abc" ).comparator);
 	}
 
 	@Test
 	public void testIgualComSimbolo() {
-		assertEquals(Comparators.EQUAL,
-				queryParser.to(new String[] { "==abc" }).comparator);
+		assertEquals(Comparators.EQUAL, queryParser.to("==abc").comparator);
 	}
 
 	@Test
 	public void testIgualNaoSensitive() {
-		assertEquals(Comparators.EQUAL_IGNORE_CASE,
-				queryParser.to(new String[] { "=*abc" }).comparator);
+		assertEquals(Comparators.EQUAL_IGNORE_CASE, queryParser.to("=*abc").comparator);
 	}
 
 	@Test
 	public void testDiferente() {
-		assertEquals(Comparators.NOT_EQUAL,
-				queryParser.to(new String[] { "<>abc" }).comparator);
+		assertEquals(Comparators.NOT_EQUAL, queryParser.to("<>abc").comparator);
 	}
 
 	@Test
 	public void testExiste() {
-		assertEquals(Comparators.EXIST,
-				queryParser.to(new String[] { "∃" }).comparator);
+		assertEquals(Comparators.EXIST, queryParser.to("∃").comparator);
 	}
 
 	@Test
 	public void testNaoNulo() {
-		assertEquals(Comparators.NOT_NULL,
-				queryParser.to(new String[] { "!∅" }).comparator);
+		assertEquals(Comparators.NOT_NULL, queryParser.to("!∅" ).comparator);
 	}
 
 	@Test
 	public void testNulo() {
-		assertEquals(Comparators.NULL,
-				queryParser.to(new String[] { "∅" }).comparator);
+		assertEquals(Comparators.NULL, queryParser.to("∅").comparator);
 	}
 
 	@Test
 	public void testMaior() {
-		assertEquals(Comparators.GREATER_THAN,
-				queryParser.to(new String[] { ">45" }).comparator);
+		assertEquals(Comparators.GREATER_THAN, queryParser.to(">45").comparator);
 	}
 
 	@Test
 	public void testMaiorOuIgual() {
-		assertEquals(Comparators.GREATER_THAN_OR_EQUAL,
-				queryParser.to(new String[] { ">=45" }).comparator);
+		assertEquals(Comparators.GREATER_THAN_OR_EQUAL, queryParser.to(">=45").comparator);
 	}
 
 	@Test
 	public void testMenorOuIgual() {
-		assertEquals(Comparators.LESS_THAN_OR_EQUAL,
-				queryParser.to(new String[] { "<=45" }).comparator);
+		assertEquals(Comparators.LESS_THAN_OR_EQUAL, queryParser.to("<=45").comparator);
 	}
 
 	@Test
 	public void testMenor() {
-		assertEquals(Comparators.LESS_THAN,
-				queryParser.to(new String[] { "<45" }).comparator);
+		assertEquals(Comparators.LESS_THAN, queryParser.to("<45").comparator);
 	}
 }
