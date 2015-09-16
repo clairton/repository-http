@@ -133,7 +133,7 @@ public class QueryParser {
 	
 	protected Record to(final String value) {
 		for (final Comparator c : Comparators.values()) {
-			final String expression = escaper.matcher(c.toString()).replaceAll("\\\\$1");
+			final String expression = escaper.matcher(c.toString()).replaceAll("\\\\$1").replace("^", "\\^");
 			final String regex = "^" + expression + ".*";
 			logger.debug(regex);
 			if (value.matches(regex)) {
@@ -145,16 +145,7 @@ public class QueryParser {
 
 	protected Record to(final String[] values) {
 		if (values.length == 1) {
-			for (final Comparator c : Comparators.values()) {
-				final String string = values[0];
-				final String value = escaper.matcher(c.toString()).replaceAll("\\\\$1");
-				final String regex = "^" + value + ".*";
-				logger.debug(regex);
-				if (string.matches(regex)) {
-					return new Record(string.replaceAll(value, ""), c);
-				}
-			}
-			return new Record(values[0], Comparators.EQUAL);
+			return to(values[0]);
 		} else {
 			return new Record(values, Comparators.EQUAL);
 		}

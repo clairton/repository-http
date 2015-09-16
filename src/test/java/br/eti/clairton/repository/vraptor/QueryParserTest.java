@@ -171,4 +171,14 @@ public class QueryParserTest {
 	public void testMenor() {
 		assertEquals(Comparators.LESS_THAN, queryParser.to("<45").comparator);
 	}
+
+	@Test
+	public void testTeminaCom() {
+		assertEquals(Comparators.ENDS_WITH, queryParser.to("$bar").comparator);
+	}
+
+	@Test
+	public void testComecaCom() {
+		assertEquals(Comparators.STARTS_WITH, queryParser.to("^foo").comparator);
+	}
 }
