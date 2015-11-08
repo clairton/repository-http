@@ -1,6 +1,6 @@
 # repository-vraptor[![Build Status](https://drone.io/github.com/clairton/repository-vraptor/status.png)](https://drone.io/github.com/clairton/repository-vraptor/latest)
 
-Converte url para predicates de repository.
+Converte url para predicates de [Repository](https://github.com/clairton/repository).
 
 Segue exemplos:
 ```java
@@ -42,6 +42,22 @@ As operações lógicas disponíveis são:
 * <  Menor
 * <= Menor ou Igual
 
+Para recuperar no lador do servidor:
+```java
+@Inject QueryParser queryParser;
+@Inject ServletRequest request;
+@Inject Repository repository;
+Class<?> modelType = Aplicacao.class;
+...
+Page page = queryParser.paginate(request, modelType);
+Collection<Predicate> predicates = queryParser.parse(request, modelType);
+List<Order> orders = queryParser.order(request, modelType);;
+PaginatedCollection<Aplicacao, Meta> collection = repository.from(modelType)
+							.distinct()
+							.where(predicates)
+							.orderBy(orders)
+							.collection(paginate.offset, paginate.limit);
+```
 
 Para usar será necessário adicionar os repositórios maven:
 
