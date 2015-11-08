@@ -51,7 +51,7 @@ Class<?> modelType = Aplicacao.class;
 ...
 Page page = queryParser.paginate(request, modelType);
 Collection<Predicate> predicates = queryParser.parse(request, modelType);
-List<Order> orders = queryParser.order(request, modelType);;
+List<Order> orders = queryParser.order(request, modelType);
 PaginatedCollection<Aplicacao, Meta> collection = repository.from(modelType)
 							.distinct()
 							.where(predicates)
