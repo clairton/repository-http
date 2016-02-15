@@ -1,5 +1,7 @@
 package br.eti.clairton.repository.vraptor;
 
+import static br.eti.clairton.repository.Order.Direction.ASC;
+import static br.eti.clairton.repository.Order.Direction.byString;
 import static br.eti.clairton.repository.vraptor.Param.DIRECTION;
 import static br.eti.clairton.repository.vraptor.Param.PAGE;
 import static br.eti.clairton.repository.vraptor.Param.PER_PAGE;
@@ -30,7 +32,7 @@ import br.eti.clairton.repository.Comparator;
 import br.eti.clairton.repository.Comparators;
 import br.eti.clairton.repository.Model;
 import br.eti.clairton.repository.Order;
-import br.eti.clairton.repository.Order.Type;
+import br.eti.clairton.repository.Order.Direction;
 import br.eti.clairton.repository.Predicate;
 
 @Dependent
@@ -100,11 +102,11 @@ public class QueryParser {
 		for(int i = 0, j = orderBy.length; i < j; i++){
 			final String field = orderBy[i];
 			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
-			Type type;
+			Direction type;
 			try{
-				type = Type.byString(sort[i]);
+				type = byString(sort[i]);
 			}catch(ArrayIndexOutOfBoundsException e){
-				type = Type.ASC;
+				type = ASC;
 			}
 			final Order order = new Order(type, attrs);
 			orders.add(order);

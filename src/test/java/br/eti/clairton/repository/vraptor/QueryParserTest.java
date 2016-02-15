@@ -1,5 +1,7 @@
 package br.eti.clairton.repository.vraptor;
 
+import static br.eti.clairton.repository.Order.Direction.ASC;
+import static br.eti.clairton.repository.Order.Direction.DESC;
 import static br.eti.clairton.repository.vraptor.VRaptorRunner.navigate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +20,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import br.eti.clairton.repository.Comparators;
 import br.eti.clairton.repository.Order;
-import br.eti.clairton.repository.Order.Type;
 import br.eti.clairton.repository.Predicate;
 
 @RunWith(VRaptorRunner.class)
@@ -53,9 +54,9 @@ public class QueryParserTest {
 		request.addParameter("sort", new String[]{"nome", "aplicacao.id", "aplicacao.nome"});
 		final List<Order> orders = queryParser.order(request, Recurso.class);
 		assertEquals(3, orders.size());
-		assertEquals(Type.ASC, orders.get(0).getType());
-		assertEquals(Type.DESC, orders.get(1).getType());
-		assertEquals(Type.ASC, orders.get(2).getType());
+		assertEquals(ASC, orders.get(0).getDirection());
+		assertEquals(DESC, orders.get(1).getDirection());
+		assertEquals(ASC, orders.get(2).getDirection());
 		assertEquals(1, orders.get(0).getAttributes().size());
 		assertEquals(2, orders.get(1).getAttributes().size());
 	}
