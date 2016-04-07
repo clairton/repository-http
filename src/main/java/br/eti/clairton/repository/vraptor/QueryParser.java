@@ -32,7 +32,6 @@ import br.com.caelum.vraptor.core.Converters;
 import br.eti.clairton.repository.AttributeBuilder;
 import br.eti.clairton.repository.Comparator;
 import br.eti.clairton.repository.Comparators;
-import br.eti.clairton.repository.Model;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Order.Direction;
 import br.eti.clairton.repository.Predicate;
@@ -61,7 +60,7 @@ public class QueryParser {
 		this.converters = converters;
 	}
 
-	public Collection<Predicate> parse(final ServletRequest request, final Class<? extends Model> modelType) {
+	public Collection<Predicate> parse(final ServletRequest request, final Class<?> modelType) {
 		final Collection<Predicate> predicates = new ArrayList<Predicate>();
 		final Enumeration<String> parameters = request.getParameterNames();
 		while (parameters.hasMoreElements()) {
@@ -82,7 +81,7 @@ public class QueryParser {
 		return predicates;
 	}
 	
-	public List<Order> order(final ServletRequest request, final Class<? extends Model> modelType){
+	public List<Order> order(final ServletRequest request, final Class<?> modelType){
 		final Map<String, String[]> params;
 		if (request.getParameterMap() != null) {
 			params = request.getParameterMap();
@@ -117,7 +116,7 @@ public class QueryParser {
 		return orders;
 	}
 
-	public Page paginate(final ServletRequest request, final Class<? extends Model> modelType) {
+	public Page paginate(final ServletRequest request, final Class<?> modelType) {
 		final Map<String, String[]> params;
 		if (request.getParameterMap() != null) {
 			params = request.getParameterMap();
