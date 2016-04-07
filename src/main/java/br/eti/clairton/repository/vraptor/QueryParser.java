@@ -6,6 +6,9 @@ import static br.eti.clairton.repository.vraptor.Param.DIRECTION;
 import static br.eti.clairton.repository.vraptor.Param.PAGE;
 import static br.eti.clairton.repository.vraptor.Param.PER_PAGE;
 import static br.eti.clairton.repository.vraptor.Param.SORT;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.compile;
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +25,6 @@ import javax.inject.Inject;
 import javax.persistence.metamodel.Attribute;
 import javax.servlet.ServletRequest;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import br.com.caelum.vraptor.converter.Converter;
@@ -37,15 +39,15 @@ import br.eti.clairton.repository.Predicate;
 
 @Dependent
 public class QueryParser {
-	private final List<String> query = Arrays.asList(SORT,PAGE,PER_PAGE,DIRECTION);
+	private static final Logger logger = getLogger(QueryParser.class);
+
+	private final List<String> query = asList(SORT, PAGE, PER_PAGE, DIRECTION);
 	
 	private final AttributeBuilder builder;
 
 	private final Converters converters;
 
-	private final Logger logger = LogManager.getLogger(getClass());
-
-	private final Pattern escaper = Pattern.compile("([^a-zA-z0-9])");
+	private final Pattern escaper = compile("([^a-zA-z0-9])");
 
 	@Deprecated
 	protected QueryParser() {
@@ -68,8 +70,9 @@ public class QueryParser {
 				continue;
 			}
 			final Collection<Predicate> predicate;
-			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
+			final Attribute<?, ?>[] attrs = builder.with(modelType, "ids[]".equals(field) ? "id" : field);
 			if(attrs.length == 1 && attrs[0] == null){
+				logger.warn("Attribute {}#{} not found", modelType, field);
 				continue;
 			}
 			final String[] values = request.getParameterValues(field);
