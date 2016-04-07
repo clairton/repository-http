@@ -68,9 +68,13 @@ public class QueryParser {
 				continue;
 			}
 			final Collection<Predicate> predicate;
-			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
+			Attribute<?, ?>[] attrs = builder.with(modelType, field);
 			if(attrs.length == 1 && attrs[0] == null){
-				continue;
+				if("ids[]".equals(field)){					
+					attrs = builder.with(modelType, "id");
+				} else {					
+					continue;
+				}
 			}
 			final String[] values = request.getParameterValues(field);
 			predicate = to(attrs, values);

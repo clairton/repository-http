@@ -1,5 +1,17 @@
 package br.eti.clairton.repository.vraptor;
 
+import static br.eti.clairton.repository.Comparators.ENDS_WITH;
+import static br.eti.clairton.repository.Comparators.EQUAL;
+import static br.eti.clairton.repository.Comparators.EQUAL_IGNORE_CASE;
+import static br.eti.clairton.repository.Comparators.EXIST;
+import static br.eti.clairton.repository.Comparators.GREATER_THAN;
+import static br.eti.clairton.repository.Comparators.GREATER_THAN_OR_EQUAL;
+import static br.eti.clairton.repository.Comparators.LESS_THAN;
+import static br.eti.clairton.repository.Comparators.LESS_THAN_OR_EQUAL;
+import static br.eti.clairton.repository.Comparators.NOT_EQUAL;
+import static br.eti.clairton.repository.Comparators.NOT_NULL;
+import static br.eti.clairton.repository.Comparators.NULL;
+import static br.eti.clairton.repository.Comparators.STARTS_WITH;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
 import static br.eti.clairton.repository.vraptor.VRaptorRunner.navigate;
@@ -18,7 +30,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import br.eti.clairton.repository.Comparators;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
 
@@ -59,6 +70,13 @@ public class QueryParserTest {
 		assertEquals(ASC, orders.get(2).getDirection());
 		assertEquals(1, orders.get(0).getAttributes().size());
 		assertEquals(2, orders.get(1).getAttributes().size());
+	}
+
+	@Test
+	public void testIds() {
+		request.addParameter("ids[]", new String[]{">=0", "<>100", "<1000"});
+		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		assertEquals(3, predicates.size());
 	}
 
 	@Test
@@ -120,66 +138,66 @@ public class QueryParserTest {
 
 	@Test
 	public void testIgual() {
-		assertEquals(Comparators.EQUAL, queryParser.to("abc" ).comparator);
+		assertEquals(EQUAL, queryParser.to("abc" ).comparator);
 	}
 
 	@Test
 	public void testIgualComSimbolo() {
-		assertEquals(Comparators.EQUAL, queryParser.to("==abc").comparator);
+		assertEquals(EQUAL, queryParser.to("==abc").comparator);
 	}
 
 	@Test
 	public void testIgualNaoSensitive() {
-		assertEquals(Comparators.EQUAL_IGNORE_CASE, queryParser.to("=*abc").comparator);
+		assertEquals(EQUAL_IGNORE_CASE, queryParser.to("=*abc").comparator);
 	}
 
 	@Test
 	public void testDiferente() {
-		assertEquals(Comparators.NOT_EQUAL, queryParser.to("<>abc").comparator);
+		assertEquals(NOT_EQUAL, queryParser.to("<>abc").comparator);
 	}
 
 	@Test
 	public void testExiste() {
-		assertEquals(Comparators.EXIST, queryParser.to("∃").comparator);
+		assertEquals(EXIST, queryParser.to("∃").comparator);
 	}
 
 	@Test
 	public void testNaoNulo() {
-		assertEquals(Comparators.NOT_NULL, queryParser.to("!∅" ).comparator);
+		assertEquals(NOT_NULL, queryParser.to("!∅" ).comparator);
 	}
 
 	@Test
 	public void testNulo() {
-		assertEquals(Comparators.NULL, queryParser.to("∅").comparator);
+		assertEquals(NULL, queryParser.to("∅").comparator);
 	}
 
 	@Test
 	public void testMaior() {
-		assertEquals(Comparators.GREATER_THAN, queryParser.to(">45").comparator);
+		assertEquals(GREATER_THAN, queryParser.to(">45").comparator);
 	}
 
 	@Test
 	public void testMaiorOuIgual() {
-		assertEquals(Comparators.GREATER_THAN_OR_EQUAL, queryParser.to(">=45").comparator);
+		assertEquals(GREATER_THAN_OR_EQUAL, queryParser.to(">=45").comparator);
 	}
 
 	@Test
 	public void testMenorOuIgual() {
-		assertEquals(Comparators.LESS_THAN_OR_EQUAL, queryParser.to("<=45").comparator);
+		assertEquals(LESS_THAN_OR_EQUAL, queryParser.to("<=45").comparator);
 	}
 
 	@Test
 	public void testMenor() {
-		assertEquals(Comparators.LESS_THAN, queryParser.to("<45").comparator);
+		assertEquals(LESS_THAN, queryParser.to("<45").comparator);
 	}
 
 	@Test
 	public void testTeminaCom() {
-		assertEquals(Comparators.ENDS_WITH, queryParser.to("$bar").comparator);
+		assertEquals(ENDS_WITH, queryParser.to("$bar").comparator);
 	}
 
 	@Test
 	public void testComecaCom() {
-		assertEquals(Comparators.STARTS_WITH, queryParser.to("^foo").comparator);
+		assertEquals(STARTS_WITH, queryParser.to("^foo").comparator);
 	}
 }
