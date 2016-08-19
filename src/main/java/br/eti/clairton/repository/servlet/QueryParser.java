@@ -13,17 +13,15 @@ import static org.apache.logging.log4j.LogManager.getLogger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.metamodel.Attribute;
-import javax.servlet.ServletRequest;
 
 import org.apache.logging.log4j.Logger;
 
@@ -55,11 +53,10 @@ public class QueryParser {
 		this.builder = attributeBuilder;
 	}
 
-	public Collection<Predicate> parse(final ServletRequest request, final Class<?> modelType) {
+	public Collection<Predicate> parse(final Map<String, String[]> params, final Class<?> modelType) {
 		final Collection<Predicate> predicates = new ArrayList<Predicate>();
-		final Enumeration<String> parameters = request.getParameterNames();
-		while (parameters.hasMoreElements()) {
-			final String field = parameters.nextElement();
+		final Set<String> keys = params.keySet();
+		for(final String field : keys) {
 			if (query.contains(field) || "format".equals(field)) {
 				continue;
 			}
@@ -69,19 +66,17 @@ public class QueryParser {
 				logger.warn("Attribute {}#{} not found", modelType, field);
 				continue;
 			}
-			final String[] values = request.getParameterValues(field);
+			final String[] values = params.get(field);
 			predicate = to(attrs, values);
 			predicates.addAll(predicate);
 		}
 		return predicates;
 	}
 	
-	public List<Order> order(final ServletRequest request, final Class<?> modelType){
-		final Map<String, String[]> params;
-		if (request.getParameterMap() != null) {
-			params = request.getParameterMap();
-		} else {
-			params = new HashMap<String, String[]>();
+	public List<Order> order(final Map<String, String[]> params, final Class<?> modelType){
+		final List<Order> orders = new ArrayList<Order>();
+		if (params == null) {
+			return orders;
 		}
 		final String[] sort;
 		final String[] orderBy;
@@ -95,7 +90,6 @@ public class QueryParser {
 		} else {
 			orderBy = new String[]{"id"};
 		}
-		final List<Order> orders = new ArrayList<Order>();
 		for(int i = 0, j = orderBy.length; i < j; i++){
 			final String field = orderBy[i];
 			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
@@ -111,12 +105,9 @@ public class QueryParser {
 		return orders;
 	}
 
-	public Page paginate(final ServletRequest request, final Class<?> modelType) {
-		final Map<String, String[]> params;
-		if (request.getParameterMap() != null) {
-			params = request.getParameterMap();
-		} else {
-			params = new HashMap<String, String[]>();
+	public Page paginate(final Map<String, String[]> params, final Class<?> modelType) {
+		if (params == null) {
+			return new Page(0, 0);
 		}
 		final Integer page;
 		final Integer perPage;

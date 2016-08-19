@@ -20,26 +20,24 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import br.com.caelum.vraptor.test.VRaptorTestResult;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
-import br.eti.clairton.repository.servlet.QueryParser;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {
 	private @Inject QueryParser queryParser;
-
-	private MockHttpServletRequest request = new MockHttpServletRequest();
 
 	@Before
 	public void init() {
@@ -60,8 +58,9 @@ public class QueryParserTest {
 	public void testParseArray() {
 		// nome[]=remove&nome[]=update
 		final String[] values = new String[] { "remove", "update" };
-		request.addParameter("nome", values);
-		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("nome", values);
+		final Collection<Predicate> predicates = queryParser.parse(params, Recurso.class);
 		assertEquals(1, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateRemove = interator.next();
@@ -72,9 +71,10 @@ public class QueryParserTest {
 
 	@Test
 	public void testOrder() {
-		request.addParameter("direction", new String[]{"asc", "desc"});
-		request.addParameter("sort", new String[]{"nome", "aplicacao.id", "aplicacao.nome"});
-		final List<Order> orders = queryParser.order(request, Recurso.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("direction", new String[]{"asc", "desc"});
+		params.put("sort", new String[]{"nome", "aplicacao.id", "aplicacao.nome"});
+		final List<Order> orders = queryParser.order(params, Recurso.class);
 		assertEquals(3, orders.size());
 		assertEquals(ASC, orders.get(0).getDirection());
 		assertEquals(DESC, orders.get(1).getDirection());
@@ -85,15 +85,17 @@ public class QueryParserTest {
 
 	@Test
 	public void testIds() {
-		request.addParameter("ids[]", new String[]{">=0", "<>100", "<1000"});
-		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("ids[]", new String[]{">=0", "<>100", "<1000"});
+		final Collection<Predicate> predicates = queryParser.parse(params, Recurso.class);
 		assertEquals(3, predicates.size());
 	}
 
 	@Test
 	public void testArray() {
-		request.addParameter("id[]", new String[]{">=0", "<>100", "<1000"});
-		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("id[]", new String[]{">=0", "<>100", "<1000"});
+		final Collection<Predicate> predicates = queryParser.parse(params, Recurso.class);
 		assertEquals(3, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateMaiorQueZero = interator.next();
@@ -112,9 +114,10 @@ public class QueryParserTest {
 
 	@Test
 	public void testParseComplex() {
-		request.addParameter("aplicacao.nome", "=*Pass");
-		request.addParameter("aplicacao.id", ">=0");
-		final Collection<Predicate> predicates = queryParser.parse(request, Recurso.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("aplicacao.nome", new String[]{"=*Pass"});
+		params.put("aplicacao.id", new String[]{">=0"});
+		final Collection<Predicate> predicates = queryParser.parse(params, Recurso.class);
 		assertEquals(2, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateNome = interator.next();
@@ -132,9 +135,10 @@ public class QueryParserTest {
 	@Test
 	public void testParseSimple() {
 		// nome=Pass&id=>=0
-		request.addParameter("nome", "=*Pass");
-		request.addParameter("id", ">=0");
-		final Collection<Predicate> predicates = queryParser.parse(request, Aplicacao.class);
+		final Map<String, String[]> params = new HashMap<>();
+		params.put("nome", new String[]{"=*Pass"});
+		params.put("id", new String[]{">=0"});
+		final Collection<Predicate> predicates = queryParser.parse(params, Aplicacao.class);
 		assertEquals(2, predicates.size());
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateNome = interator.next();

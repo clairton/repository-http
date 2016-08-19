@@ -17,8 +17,6 @@ import br.eti.clairton.paginated.collection.PaginatedCollection;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
 import br.eti.clairton.repository.Repository;
-import br.eti.clairton.repository.servlet.Page;
-import br.eti.clairton.repository.servlet.QueryParser;
 
 @Controller
 @Path("aplicacoes")
@@ -53,14 +51,14 @@ public class AplicacaoController{
 	@Get("")
 	public void index() {
 		System.out.println(request.getParameterValues("page"));
-		final Page paginate = queryParser.paginate(request, Aplicacao.class);
-		final Collection<Predicate> predicates = queryParser.parse(request, Aplicacao.class);
+		final Page paginate = queryParser.paginate(request.getParameterMap(), Aplicacao.class);
+		final Collection<Predicate> predicates = queryParser.parse(request.getParameterMap(), Aplicacao.class);
 		repository.from(Aplicacao.class);
 		repository.distinct();
 		if (!predicates.isEmpty()) {
 			repository.where(predicates);
 		}
-		final List<Order> orders = queryParser.order(request, Aplicacao.class);
+		final List<Order> orders = queryParser.order(request.getParameterMap(), Aplicacao.class);
 		repository.orderBy(orders);
 		final PaginatedCollection<Aplicacao, Meta> aplicacoes = repository.collection(paginate.offset, paginate.limit);
 		result.use(json()).from(aplicacoes).serialize();		
