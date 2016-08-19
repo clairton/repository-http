@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

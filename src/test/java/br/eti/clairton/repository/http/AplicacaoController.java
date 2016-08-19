@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import static br.com.caelum.vraptor.view.Results.json;
 
@@ -17,6 +17,8 @@ import br.eti.clairton.paginated.collection.PaginatedCollection;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
 import br.eti.clairton.repository.Repository;
+import br.eti.clairton.repository.http.Page;
+import br.eti.clairton.repository.http.QueryParser;
 
 @Controller
 @Path("aplicacoes")

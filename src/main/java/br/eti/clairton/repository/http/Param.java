@@ -1,6 +1,6 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
-class Param {
+public class Param {
     public static final String PAGE = "page";
     
     public static final String DIRECTION = "direction";

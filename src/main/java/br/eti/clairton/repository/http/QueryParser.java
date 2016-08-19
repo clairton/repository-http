@@ -1,13 +1,13 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import static br.eti.clairton.repository.Comparators.EQUAL;
 import static br.eti.clairton.repository.Comparators.LIKE;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.byString;
-import static br.eti.clairton.repository.servlet.Param.DIRECTION;
-import static br.eti.clairton.repository.servlet.Param.PAGE;
-import static br.eti.clairton.repository.servlet.Param.PER_PAGE;
-import static br.eti.clairton.repository.servlet.Param.SORT;
+import static br.eti.clairton.repository.http.Param.DIRECTION;
+import static br.eti.clairton.repository.http.Param.PAGE;
+import static br.eti.clairton.repository.http.Param.PER_PAGE;
+import static br.eti.clairton.repository.http.Param.SORT;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.compile;

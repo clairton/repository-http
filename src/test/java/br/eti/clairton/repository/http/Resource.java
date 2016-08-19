@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import java.sql.Connection;
 

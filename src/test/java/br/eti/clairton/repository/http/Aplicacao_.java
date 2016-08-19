@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;

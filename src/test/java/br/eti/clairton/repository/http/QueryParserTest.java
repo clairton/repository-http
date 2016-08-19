@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.servlet;
+package br.eti.clairton.repository.http;
 
 import static br.eti.clairton.repository.Comparators.ENDS_WITH;
 import static br.eti.clairton.repository.Comparators.EQUAL;
@@ -14,7 +14,7 @@ import static br.eti.clairton.repository.Comparators.NULL;
 import static br.eti.clairton.repository.Comparators.STARTS_WITH;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
-import static br.eti.clairton.repository.servlet.VRaptorRunner.navigate;
+import static br.eti.clairton.repository.http.VRaptorRunner.navigate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -34,6 +34,7 @@ import org.junit.runner.RunWith;
 import br.com.caelum.vraptor.test.VRaptorTestResult;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
+import br.eti.clairton.repository.http.QueryParser;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {

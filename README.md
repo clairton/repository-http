@@ -1,6 +1,6 @@
-# repository-servlet[![Build Status](https://drone.io/github.com/clairton/repository-servlet/status.png)](https://drone.io/github.com/clairton/repository-servlet/latest)
+# repository-http[![Build Status](https://drone.io/github.com/clairton/repository-http/status.png)](https://drone.io/github.com/clairton/repository-http/latest)
 
-Converte url para predicates de [Repository](https://github.com/clairton/repository).
+Convert url para predicates de [Repository](https://github.com/clairton/repository).
 
 Segue exemplos:
 ```java
@@ -75,12 +75,12 @@ Para usar será necessário adicionar os repositórios maven:
 ```xml
 <dependency>
     <groupId>br.eti.clairton</groupId>
-	<artifactId>repository-servlet</artifactId>
-	<version>0.1.0</version>
+	<artifactId>repository-http</artifactId>
+	<version>lastversion</version>
 </dependency>
 <dependency>
     <groupId>br.eti.clairton</groupId>
 	<artifactId>repository</artifactId>
-	<version>0.1.0</version>
+	<version>lastversion</version>
 </dependency>
 ```
