@@ -9,8 +9,10 @@ import static br.eti.clairton.repository.servlet.Param.PAGE;
 import static br.eti.clairton.repository.servlet.Param.PER_PAGE;
 import static br.eti.clairton.repository.servlet.Param.SORT;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ public class QueryParser {
 	private static final Logger logger = getLogger(QueryParser.class);
 
 	private final List<String> query = asList(SORT, PAGE, PER_PAGE, DIRECTION);
-	
+
 	private final AttributeBuilder builder;
 
 	private final Pattern escaper = compile("([^a-zA-z0-9])");
@@ -56,14 +58,25 @@ public class QueryParser {
 
 	public Collection<Predicate> parse(final Map<String, String[]> params, final Class<?> modelType) {
 		final Collection<Predicate> predicates = new ArrayList<Predicate>();
+		final String ids = "ids[]";
+		if (params.containsKey(ids)) {
+			final String[] values;
+			if(params.containsKey("id")){
+				values = concat(stream(params.get("id")), stream(params.get(ids))).toArray(String[]::new);
+			}else{				
+				values = params.get(ids);
+			}
+			params.put("id", values);
+			params.remove(ids);
+		}
 		final Set<String> keys = params.keySet();
-		for(final String field : keys) {
+		for (final String field : keys) {
 			if (query.contains(field) || "format".equals(field)) {
 				continue;
 			}
 			final Collection<Predicate> predicate;
-			final Attribute<?, ?>[] attrs = builder.with(modelType, "ids[]".equals(field) ? "id" : field);
-			if(attrs.length == 1 && attrs[0] == null){
+			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
+			if (attrs.length == 1 && attrs[0] == null) {
 				logger.warn("Attribute {}#{} not found", modelType, field);
 				continue;
 			}
@@ -73,8 +86,8 @@ public class QueryParser {
 		}
 		return predicates;
 	}
-	
-	public List<Order> order(final Map<String, String[]> params, final Class<?> modelType){
+
+	public List<Order> order(final Map<String, String[]> params, final Class<?> modelType) {
 		final List<Order> orders = new ArrayList<Order>();
 		if (params == null) {
 			return orders;
@@ -84,20 +97,20 @@ public class QueryParser {
 		if (params.containsKey(DIRECTION)) {
 			sort = params.get(DIRECTION);
 		} else {
-			sort = new String[]{"asc"};
+			sort = new String[] { "asc" };
 		}
 		if (params.containsKey(SORT)) {
 			orderBy = params.get(SORT);
 		} else {
-			orderBy = new String[]{"id"};
+			orderBy = new String[] { "id" };
 		}
-		for(int i = 0, j = orderBy.length; i < j; i++){
+		for (int i = 0, j = orderBy.length; i < j; i++) {
 			final String field = orderBy[i];
 			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
 			Direction type;
-			try{
+			try {
 				type = byString(sort[i]);
-			}catch(ArrayIndexOutOfBoundsException e){
+			} catch (final ArrayIndexOutOfBoundsException e) {
 				type = ASC;
 			}
 			final Order order = new Order(type, attrs);
@@ -121,7 +134,7 @@ public class QueryParser {
 		}
 		return new Page(page, perPage);
 	}
-	
+
 	protected Record to(final String value) {
 		for (final Comparator c : Comparators.values()) {
 			final String expression = escaper.matcher(c.toString()).replaceAll("\\\\$1").replace("^", "\\^");
@@ -141,7 +154,6 @@ public class QueryParser {
 			return new Record(values, EQUAL);
 		}
 	}
-	
 
 	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
 		final Record record = to(value);
@@ -150,23 +162,24 @@ public class QueryParser {
 		final Predicate predicate = new Predicate(object, comparator, attrs);
 		return predicate;
 	}
-	
 
 	protected <T> Collection<Predicate> to(final Attribute<?, ?>[] attrs, final String[] value) {
 		if (value.length > 1) {
 			final List<Predicate> predicates = new ArrayList<>();
 			for (final String s : value) {
 				final Predicate predicate = to(attrs, s);
-				predicates.add(predicate);				
+				predicates.add(predicate);
 			}
-			//verificar se todas as comparações são iguais, significa que deve ser um like
-			if(predicates.stream().filter(p -> p.getComparator().equals(EQUAL)).count() == Long.valueOf(predicates.size())){
+			// verificar se todas as comparações são iguais, significa que deve
+			// ser um like
+			if (predicates.stream().filter(p -> p.getComparator().equals(EQUAL)).count() == Long
+					.valueOf(predicates.size())) {
 				final Attribute<?, ?>[] attributes = predicates.get(0).getAttributes();
 				final List<?> values = predicates.stream().map(p -> p.getValue()).collect(toList());
 				final Comparator comparator = LIKE;
-				final Predicate predicate = new Predicate(values,comparator, attributes);
+				final Predicate predicate = new Predicate(values, comparator, attributes);
 				return asList(predicate);
-			}			
+			}
 			return predicates;
 		} else {
 			final Predicate predicate = to(attrs, value[0]);

@@ -48,7 +48,7 @@ public class QueryParserTest {
 	@Test
 	public void testInController() {
 		VRaptorTestResult result = navigate()
-									.get("/aplicacoes?nome=Gol&id=1&page=1&per_page=10&sort=nome&direction=ASC")
+									.get("/aplicacoes?nome=Gol&id=3&ids[]=1&ids[]=2&page=1&per_page=10&sort=nome&direction=ASC")
 									.execute();
 		result.wasStatus(200);
 	}

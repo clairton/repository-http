@@ -44,13 +44,8 @@ public class AplicacaoController{
 		this.result = result;
 	}
 
-	/**
-	 * Mostra os recursos.<br/>
-	 * Parametros para pesquisa são mandados na URL.
-	 */
 	@Get("")
 	public void index() {
-		System.out.println(request.getParameterValues("page"));
 		final Page paginate = queryParser.paginate(request.getParameterMap(), Aplicacao.class);
 		final Collection<Predicate> predicates = queryParser.parse(request.getParameterMap(), Aplicacao.class);
 		repository.from(Aplicacao.class);
