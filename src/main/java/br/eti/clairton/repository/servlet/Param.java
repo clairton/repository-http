@@ -1,6 +1,8 @@
 package br.eti.clairton.repository.servlet;
 
-public class Param {
+import static java.lang.String.format;
+
+class Param {
     public static final String PAGE = "page";
     
     public static final String DIRECTION = "direction";
@@ -25,11 +27,11 @@ public class Param {
     private static final String OPERATION = "o";
     
     public static String value(final String name) {
-        return String.format("%s[][%s]", Param.VALUE, name);
+        return format("%s[][%s]", VALUE, name);
     }
     
     public static String operation(final String name) {
-        return String.format("%s[][%s]", Param.OPERATION, name);
+        return format("%s[][%s]", OPERATION, name);
     }
     
     public static String field() {

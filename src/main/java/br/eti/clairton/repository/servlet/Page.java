@@ -1,6 +1,6 @@
 package br.eti.clairton.repository.servlet;
 
-public class Page {
+class Page {
 	public final Integer offset;
 	public final Integer limit;
 

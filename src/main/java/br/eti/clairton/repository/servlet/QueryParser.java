@@ -1,5 +1,7 @@
 package br.eti.clairton.repository.servlet;
 
+import static br.eti.clairton.repository.Comparators.EQUAL;
+import static br.eti.clairton.repository.Comparators.LIKE;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.byString;
 import static br.eti.clairton.repository.servlet.Param.DIRECTION;
@@ -8,16 +10,15 @@ import static br.eti.clairton.repository.servlet.Param.PER_PAGE;
 import static br.eti.clairton.repository.servlet.Param.SORT;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
+import static java.util.stream.Collectors.toList;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -130,14 +131,14 @@ public class QueryParser {
 				return new Record(value.replaceAll(expression, ""), c);
 			}
 		}
-		return new Record(value, Comparators.EQUAL);
+		return new Record(value, EQUAL);
 	}
 
 	protected Record to(final String[] values) {
 		if (values.length == 1) {
 			return to(values[0]);
 		} else {
-			return new Record(values, Comparators.EQUAL);
+			return new Record(values, EQUAL);
 		}
 	}
 	
@@ -159,28 +160,17 @@ public class QueryParser {
 				predicates.add(predicate);				
 			}
 			//verificar se todas as comparações são iguais, significa que deve ser um like
-			if(predicates.stream().filter(p -> p.getComparator().equals(Comparators.EQUAL)).count() == Long.valueOf(predicates.size())){
+			if(predicates.stream().filter(p -> p.getComparator().equals(EQUAL)).count() == Long.valueOf(predicates.size())){
 				final Attribute<?, ?>[] attributes = predicates.get(0).getAttributes();
-				final List<?> values = predicates.stream().map(p -> p.getValue()).collect(Collectors.toList());
-				final Comparator comparator = Comparators.LIKE;
+				final List<?> values = predicates.stream().map(p -> p.getValue()).collect(toList());
+				final Comparator comparator = LIKE;
 				final Predicate predicate = new Predicate(values,comparator, attributes);
-				return Arrays.asList(predicate);
+				return asList(predicate);
 			}			
 			return predicates;
 		} else {
 			final Predicate predicate = to(attrs, value[0]);
-			return Arrays.asList(predicate);
+			return asList(predicate);
 		}
-	}
-
-}
-
-class Record {
-	public final Object value;
-	public final Comparator comparator;
-
-	public Record(final Object value, final Comparator comparator) {
-		this.value = value;
-		this.comparator = comparator;
 	}
 }
