@@ -1,10 +1,10 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import br.eti.clairton.repository.vraptor.Param;
+import br.eti.clairton.repository.servlet.Param;
 
 public class ParamTest {
 	@Test

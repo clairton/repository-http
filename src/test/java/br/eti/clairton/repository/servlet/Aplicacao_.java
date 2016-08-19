@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;

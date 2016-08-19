@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

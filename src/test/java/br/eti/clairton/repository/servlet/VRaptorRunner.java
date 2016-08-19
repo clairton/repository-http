@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import static javax.enterprise.inject.spi.CDI.current;
 

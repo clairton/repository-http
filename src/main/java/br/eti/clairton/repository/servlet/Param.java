@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 public class Param {
     public static final String PAGE = "page";

@@ -1,4 +1,4 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import static br.eti.clairton.repository.Comparators.ENDS_WITH;
 import static br.eti.clairton.repository.Comparators.EQUAL;
@@ -14,7 +14,7 @@ import static br.eti.clairton.repository.Comparators.NULL;
 import static br.eti.clairton.repository.Comparators.STARTS_WITH;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
-import static br.eti.clairton.repository.vraptor.VRaptorRunner.navigate;
+import static br.eti.clairton.repository.servlet.VRaptorRunner.navigate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -30,8 +30,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import br.com.caelum.vraptor.test.VRaptorTestResult;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
+import br.eti.clairton.repository.servlet.QueryParser;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {
@@ -44,6 +46,15 @@ public class QueryParserTest {
 		// para registrar os converters
 		navigate().get("/").execute();
 	}
+	
+	@Test
+	public void testInController() {
+		VRaptorTestResult result = navigate()
+									.get("/aplicacoes?nome=Gol&id=1&page=1&per_page=10&sort=nome&direction=ASC")
+									.execute();
+		result.wasStatus(200);
+	}
+
 
 	@Test
 	public void testParseArray() {
@@ -87,14 +98,14 @@ public class QueryParserTest {
 		final Iterator<Predicate> interator = predicates.iterator();
 		final Predicate predicateMaiorQueZero = interator.next();
 		assertEquals(">=", predicateMaiorQueZero.getComparator().toString());
-		assertEquals(Long.valueOf(0), predicateMaiorQueZero.getValue());
+		assertEquals("0", predicateMaiorQueZero.getValue());
 		assertTrue(Recurso_.id.equals(predicateMaiorQueZero.getAttributes()[0]));
 		final Predicate predicateDiferenteDe100 = interator.next();
-		assertEquals(Long.valueOf(100), predicateDiferenteDe100.getValue());
+		assertEquals("100", predicateDiferenteDe100.getValue());
 		assertEquals("<>", predicateDiferenteDe100.getComparator().toString());
 		assertTrue(Recurso_.id.equals(predicateDiferenteDe100.getAttributes()[0]));
 		final Predicate predicateMenorQuer1000 = interator.next();
-		assertEquals(Long.valueOf(1000), predicateMenorQuer1000.getValue());
+		assertEquals("1000", predicateMenorQuer1000.getValue());
 		assertEquals("<", predicateMenorQuer1000.getComparator().toString());
 		assertTrue(Recurso_.id.equals(predicateMenorQuer1000.getAttributes()[0]));
 	}
@@ -112,7 +123,7 @@ public class QueryParserTest {
 		assertTrue(Recurso_.aplicacao.equals(predicateNome.getAttributes()[0]));
 		assertTrue(Aplicacao_.nome.equals(predicateNome.getAttributes()[1]));
 		final Predicate predicateId = interator.next();
-		assertEquals(Long.valueOf(0), predicateId.getValue());
+		assertEquals("0", predicateId.getValue());
 		assertEquals(">=", predicateId.getComparator().toString());
 		assertEquals("aplicacao", predicateId.getAttributes()[0].getName());
 		assertEquals("id", predicateId.getAttributes()[1].getName());
@@ -131,7 +142,7 @@ public class QueryParserTest {
 		assertEquals("=*", predicateNome.getComparator().toString());
 		assertTrue(Aplicacao_.nome.equals(predicateNome.getAttribute()));
 		final Predicate predicateId = interator.next();
-		assertEquals(Long.valueOf(0), predicateId.getValue());
+		assertEquals("0", predicateId.getValue());
 		assertEquals(">=", predicateId.getComparator().toString());
 		assertEquals("id", predicateId.getAttribute().getName());
 	}

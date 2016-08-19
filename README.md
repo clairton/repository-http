@@ -1,4 +1,4 @@
-# repository-vraptor[![Build Status](https://drone.io/github.com/clairton/repository-vraptor/status.png)](https://drone.io/github.com/clairton/repository-vraptor/latest)
+# repository-servlet[![Build Status](https://drone.io/github.com/clairton/repository-servlet/status.png)](https://drone.io/github.com/clairton/repository-servlet/latest)
 
 Converte url para predicates de [Repository](https://github.com/clairton/repository).
 
@@ -75,7 +75,7 @@ Para usar será necessário adicionar os repositórios maven:
 ```xml
 <dependency>
     <groupId>br.eti.clairton</groupId>
-	<artifactId>repository-vraptor</artifactId>
+	<artifactId>repository-servlet</artifactId>
 	<version>0.1.0</version>
 </dependency>
 <dependency>

@@ -1,11 +1,11 @@
-package br.eti.clairton.repository.vraptor;
+package br.eti.clairton.repository.servlet;
 
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.byString;
-import static br.eti.clairton.repository.vraptor.Param.DIRECTION;
-import static br.eti.clairton.repository.vraptor.Param.PAGE;
-import static br.eti.clairton.repository.vraptor.Param.PER_PAGE;
-import static br.eti.clairton.repository.vraptor.Param.SORT;
+import static br.eti.clairton.repository.servlet.Param.DIRECTION;
+import static br.eti.clairton.repository.servlet.Param.PAGE;
+import static br.eti.clairton.repository.servlet.Param.PER_PAGE;
+import static br.eti.clairton.repository.servlet.Param.SORT;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -27,8 +27,6 @@ import javax.servlet.ServletRequest;
 
 import org.apache.logging.log4j.Logger;
 
-import br.com.caelum.vraptor.converter.Converter;
-import br.com.caelum.vraptor.core.Converters;
 import br.eti.clairton.repository.AttributeBuilder;
 import br.eti.clairton.repository.Comparator;
 import br.eti.clairton.repository.Comparators;
@@ -44,20 +42,17 @@ public class QueryParser {
 	
 	private final AttributeBuilder builder;
 
-	private final Converters converters;
-
 	private final Pattern escaper = compile("([^a-zA-z0-9])");
 
 	@Deprecated
 	protected QueryParser() {
-		this(null, null);
+		this(null);
 	}
 
 	@Inject
-	public QueryParser(final AttributeBuilder attributeBuilder, final Converters converters) {
+	public QueryParser(final AttributeBuilder attributeBuilder) {
 		super();
 		this.builder = attributeBuilder;
-		this.converters = converters;
 	}
 
 	public Collection<Predicate> parse(final ServletRequest request, final Class<?> modelType) {
@@ -157,12 +152,8 @@ public class QueryParser {
 	
 
 	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
-		final Attribute<?, ?> lastAttr = attrs[attrs.length - 1];
-		@SuppressWarnings("unchecked")
-		final Class<T> type = (Class<T>) lastAttr.getJavaType();
-		final Converter<T> converter = converters.to(type);
 		final Record record = to(value);
-		final Object object = converter.convert(record.value.toString(), type);
+		final Object object = record.value.toString();
 		final Comparator comparator = record.comparator;
 		final Predicate predicate = new Predicate(object, comparator, attrs);
 		return predicate;

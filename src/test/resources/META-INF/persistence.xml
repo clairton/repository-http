@@ -5,8 +5,8 @@
 	version="2.0">
 	<persistence-unit name="default" transaction-type="JTA">
 		<jta-data-source>java:/jdbc/datasources/DefaultDS</jta-data-source>
-		<class>br.eti.clairton.repository.vraptor.Aplicacao</class>
-		<class>br.eti.clairton.repository.vraptor.Recurso</class>
+		<class>br.eti.clairton.repository.servlet.Aplicacao</class>
+		<class>br.eti.clairton.repository.servlet.Recurso</class>
 		<class>br.eti.clairton.repository.Model</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
