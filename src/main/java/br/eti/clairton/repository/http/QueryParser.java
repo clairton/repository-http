@@ -8,6 +8,7 @@ import static br.eti.clairton.repository.http.Param.DIRECTION;
 import static br.eti.clairton.repository.http.Param.PAGE;
 import static br.eti.clairton.repository.http.Param.PER_PAGE;
 import static br.eti.clairton.repository.http.Param.SORT;
+import static java.lang.Enum.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.compile;
@@ -157,7 +158,17 @@ public class QueryParser {
 
 	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
 		final Record record = to(value);
-		final Object object = record.value.toString();
+		final Class<?> javaType = attrs[attrs.length - 1].getJavaType();
+		final Object object;
+		if(javaType.isEnum()){
+			@SuppressWarnings("rawtypes")
+			final Class type = javaType;
+			@SuppressWarnings("unchecked")
+			final Object e = valueOf(type, record.value.toString());
+			object = e;
+		} else {
+			object = record.value.toString();			
+		}
 		final Comparator comparator = record.comparator;
 		final Predicate predicate = new Predicate(object, comparator, attrs);
 		return predicate;
@@ -172,8 +183,7 @@ public class QueryParser {
 			}
 			// verificar se todas as comparações são iguais, significa que deve
 			// ser um like
-			if (predicates.stream().filter(p -> p.getComparator().equals(EQUAL)).count() == Long
-					.valueOf(predicates.size())) {
+			if (predicates.stream().filter(p -> p.getComparator().equals(EQUAL)).count() == Long.valueOf(predicates.size())) {
 				final Attribute<?, ?>[] attributes = predicates.get(0).getAttributes();
 				final List<?> values = predicates.stream().map(p -> p.getValue()).collect(toList());
 				final Comparator comparator = LIKE;

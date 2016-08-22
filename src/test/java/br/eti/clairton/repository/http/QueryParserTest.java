@@ -14,6 +14,8 @@ import static br.eti.clairton.repository.Comparators.NULL;
 import static br.eti.clairton.repository.Comparators.STARTS_WITH;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
+import static br.eti.clairton.repository.http.Aplicacao.Tipo.A;
+import static br.eti.clairton.repository.http.Aplicacao_.tipo;
 import static br.eti.clairton.repository.http.VRaptorRunner.navigate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.persistence.metamodel.Attribute;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +37,6 @@ import org.junit.runner.RunWith;
 import br.com.caelum.vraptor.test.VRaptorTestResult;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Predicate;
-import br.eti.clairton.repository.http.QueryParser;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {
@@ -153,8 +155,13 @@ public class QueryParserTest {
 	}
 
 	@Test
+	public void testWithEnum() {
+		assertEquals(A, queryParser.to(new Attribute<?, ?>[]{tipo}, "A").getValue());
+	}
+
+	@Test
 	public void testIgual() {
-		assertEquals(EQUAL, queryParser.to("abc" ).comparator);
+		assertEquals(EQUAL, queryParser.to("abc").comparator);
 	}
 
 	@Test

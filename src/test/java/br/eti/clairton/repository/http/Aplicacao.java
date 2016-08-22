@@ -1,5 +1,7 @@
 package br.eti.clairton.repository.http;
 
+import static javax.persistence.EnumType.STRING;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +9,7 @@ import java.util.HashSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -32,7 +35,10 @@ public class Aplicacao extends Model {
 	@NotNull
 	@Size(min = 1, max = 250)
 	private String nome;
-
+	
+	@Enumerated(STRING)
+	public Tipo tipo;
+	
 	/**
 	 * Construtor padrão.
 	 */
@@ -93,5 +99,9 @@ public class Aplicacao extends Model {
 
 	public String getNome() {
 		return nome;
+	}
+	
+	public enum Tipo {
+		A, B;
 	}
 }
