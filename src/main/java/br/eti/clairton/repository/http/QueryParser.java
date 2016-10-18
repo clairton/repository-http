@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.PluralAttribute;
+import javax.persistence.metamodel.Type;
 
 import org.apache.logging.log4j.Logger;
 
@@ -158,7 +160,15 @@ public class QueryParser {
 
 	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
 		final Record record = to(value);
-		final Class<?> javaType = attrs[attrs.length - 1].getJavaType();
+		final Attribute<?, ?> attr = attrs[attrs.length - 1];
+		final Class<?> javaType;
+		if(attr.isCollection()){
+			final PluralAttribute<?, ?, ?> pa = (PluralAttribute<?, ?, ?>) attr;
+			final Type<?> type = pa.getElementType();
+			javaType = type.getJavaType();			
+		} else {
+			javaType = attr.getJavaType();
+		}
 		final Object object;
 		if(javaType.isEnum()){
 			@SuppressWarnings("rawtypes")
