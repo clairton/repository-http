@@ -8,7 +8,6 @@ import static br.eti.clairton.repository.http.Param.DIRECTION;
 import static br.eti.clairton.repository.http.Param.PAGE;
 import static br.eti.clairton.repository.http.Param.PER_PAGE;
 import static br.eti.clairton.repository.http.Param.SORT;
-import static java.lang.Enum.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.compile;
@@ -174,8 +173,10 @@ public class QueryParser {
 			@SuppressWarnings("rawtypes")
 			final Class type = javaType;
 			@SuppressWarnings("unchecked")
-			final Object e = valueOf(type, record.value.toString());
+			final Object e = Enum.valueOf(type, record.value.toString());
 			object = e;
+		} else if(javaType.isAssignableFrom(Boolean.class)){
+			object = Boolean.valueOf(record.value.toString());			
 		} else {
 			object = record.value.toString();			
 		}
