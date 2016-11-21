@@ -60,15 +60,16 @@ public class QueryParser {
 
 	public Collection<Predicate> parse(final Map<String, String[]> params, final Class<?> modelType) {
 		final Collection<Predicate> predicates = new ArrayList<Predicate>();
-		final String ids = "ids[]";
+		final String ids = idsKey(modelType);
+		final String id = idKey(modelType);
 		if (params.containsKey(ids)) {
 			final String[] values;
-			if(params.containsKey("id")){
-				values = concat(stream(params.get("id")), stream(params.get(ids))).toArray(String[]::new);
+			if(params.containsKey(id)){
+				values = concat(stream(params.get(id)), stream(params.get(ids))).toArray(String[]::new);
 			}else{				
 				values = params.get(ids);
 			}
-			params.put("id", values);
+			params.put(id, values);
 			params.remove(ids);
 		}
 		final Set<String> keys = params.keySet();
@@ -104,7 +105,7 @@ public class QueryParser {
 		if (params.containsKey(SORT)) {
 			orderBy = params.get(SORT);
 		} else {
-			orderBy = new String[] { "id" };
+			orderBy = new String[] {idKey(modelType)};
 		}
 		for (int i = 0, j = orderBy.length; i < j; i++) {
 			final String field = orderBy[i];
@@ -206,5 +207,13 @@ public class QueryParser {
 			final Predicate predicate = to(attrs, value[0]);
 			return asList(predicate);
 		}
+	}
+	
+	protected String idsKey(Class<?> modelType){
+		return "ids[]";
+	}
+	
+	protected String idKey(Class<?> modelType){
+		return "id";
 	}
 }
