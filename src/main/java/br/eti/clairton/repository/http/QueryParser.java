@@ -128,11 +128,14 @@ public class QueryParser {
 		}
 		final Integer page;
 		final Integer perPage;
-		if (params.containsKey(PAGE) && params.containsKey(PER_PAGE)) {
+		if (params.containsKey(PAGE)) {
 			page = Integer.valueOf(params.get(PAGE)[0]);
-			perPage = Integer.valueOf(params.get(PER_PAGE)[0]);
 		} else {
 			page = 0;
+		}
+		if (params.containsKey(PER_PAGE)) {
+			perPage = Integer.valueOf(params.get(PER_PAGE)[0]);
+		} else {
 			perPage = 0;
 		}
 		return new Page(page, perPage);
