@@ -1,17 +1,5 @@
 package br.eti.clairton.repository.http;
 
-import static br.eti.clairton.repository.Comparators.ENDS_WITH;
-import static br.eti.clairton.repository.Comparators.EQUAL;
-import static br.eti.clairton.repository.Comparators.EQUAL_IGNORE_CASE;
-import static br.eti.clairton.repository.Comparators.EXIST;
-import static br.eti.clairton.repository.Comparators.GREATER_THAN;
-import static br.eti.clairton.repository.Comparators.GREATER_THAN_OR_EQUAL;
-import static br.eti.clairton.repository.Comparators.LESS_THAN;
-import static br.eti.clairton.repository.Comparators.LESS_THAN_OR_EQUAL;
-import static br.eti.clairton.repository.Comparators.NOT_EQUAL;
-import static br.eti.clairton.repository.Comparators.NOT_NULL;
-import static br.eti.clairton.repository.Comparators.NULL;
-import static br.eti.clairton.repository.Comparators.STARTS_WITH;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
 import static br.eti.clairton.repository.http.Aplicacao.Tipo.A;
@@ -157,70 +145,5 @@ public class QueryParserTest {
 	@Test
 	public void testWithEnum() {
 		assertEquals(A, queryParser.to(new Attribute<?, ?>[]{tipo}, "A").getValue());
-	}
-
-	@Test
-	public void testIgual() {
-		assertEquals(EQUAL, queryParser.to("abc").comparator);
-	}
-
-	@Test
-	public void testIgualComSimbolo() {
-		assertEquals(EQUAL, queryParser.to("==abc").comparator);
-	}
-
-	@Test
-	public void testIgualNaoSensitive() {
-		assertEquals(EQUAL_IGNORE_CASE, queryParser.to("=*abc").comparator);
-	}
-
-	@Test
-	public void testDiferente() {
-		assertEquals(NOT_EQUAL, queryParser.to("<>abc").comparator);
-	}
-
-	@Test
-	public void testExiste() {
-		assertEquals(EXIST, queryParser.to("∃").comparator);
-	}
-
-	@Test
-	public void testNaoNulo() {
-		assertEquals(NOT_NULL, queryParser.to("!∅" ).comparator);
-	}
-
-	@Test
-	public void testNulo() {
-		assertEquals(NULL, queryParser.to("∅").comparator);
-	}
-
-	@Test
-	public void testMaior() {
-		assertEquals(GREATER_THAN, queryParser.to(">45").comparator);
-	}
-
-	@Test
-	public void testMaiorOuIgual() {
-		assertEquals(GREATER_THAN_OR_EQUAL, queryParser.to(">=45").comparator);
-	}
-
-	@Test
-	public void testMenorOuIgual() {
-		assertEquals(LESS_THAN_OR_EQUAL, queryParser.to("<=45").comparator);
-	}
-
-	@Test
-	public void testMenor() {
-		assertEquals(LESS_THAN, queryParser.to("<45").comparator);
-	}
-
-	@Test
-	public void testTeminaCom() {
-		assertEquals(ENDS_WITH, queryParser.to("$bar").comparator);
-	}
-
-	@Test
-	public void testComecaCom() {
-		assertEquals(STARTS_WITH, queryParser.to("^foo").comparator);
 	}
 }

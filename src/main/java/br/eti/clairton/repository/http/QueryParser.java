@@ -10,7 +10,6 @@ import static br.eti.clairton.repository.http.Param.PER_PAGE;
 import static br.eti.clairton.repository.http.Param.SORT;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -20,7 +19,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -32,7 +30,6 @@ import org.apache.logging.log4j.Logger;
 
 import br.eti.clairton.repository.AttributeBuilder;
 import br.eti.clairton.repository.Comparator;
-import br.eti.clairton.repository.Comparators;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Order.Direction;
 import br.eti.clairton.repository.Predicate;
@@ -44,8 +41,6 @@ public class QueryParser {
 	private final List<String> query = asList(SORT, PAGE, PER_PAGE, DIRECTION);
 
 	private final AttributeBuilder builder;
-
-	private final Pattern escaper = compile("([^a-zA-z0-9])");
 
 	@Deprecated
 	protected QueryParser() {
@@ -142,23 +137,11 @@ public class QueryParser {
 	}
 
 	protected Record to(final String value) {
-		for (final Comparator c : Comparators.values()) {
-			final String expression = escaper.matcher(c.toString()).replaceAll("\\\\$1").replace("^", "\\^");
-			final String regex = "^" + expression + ".*";
-			logger.debug(regex);
-			if (value.matches(regex)) {
-				return new Record(value.replaceAll(expression, ""), c);
-			}
-		}
-		return new Record(value, EQUAL);
+		return Record.valueOf(value);
 	}
 
 	protected Record to(final String[] values) {
-		if (values.length == 1) {
-			return to(values[0]);
-		} else {
-			return new Record(values, EQUAL);
-		}
+		return Record.valueOf(values);
 	}
 
 	protected <T> Predicate to(final Attribute<?, ?>[] attrs, final String value) {
