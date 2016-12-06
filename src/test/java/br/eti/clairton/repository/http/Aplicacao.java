@@ -2,12 +2,14 @@ package br.eti.clairton.repository.http;
 
 import static javax.persistence.EnumType.STRING;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
@@ -35,6 +37,9 @@ public class Aplicacao extends Model {
 	@NotNull
 	@Size(min = 1, max = 250)
 	private String nome;
+	
+	@Column(name = "criado_em")
+	private LocalDate criadoEm;
 	
 	@Enumerated(STRING)
 	public Tipo tipo;
@@ -99,6 +104,10 @@ public class Aplicacao extends Model {
 
 	public String getNome() {
 		return nome;
+	}
+	
+	public LocalDate getCriadoEm() {
+		return criadoEm;
 	}
 	
 	public enum Tipo {

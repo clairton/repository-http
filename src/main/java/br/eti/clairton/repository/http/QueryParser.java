@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -157,13 +158,11 @@ public class QueryParser {
 		}
 		final Object object;
 		if(javaType.isEnum()){
-			@SuppressWarnings("rawtypes")
-			final Class type = javaType;
-			@SuppressWarnings("unchecked")
-			final Object e = Enum.valueOf(type, record.value.toString());
-			object = e;
+			object = parseEnum(record.value, javaType);
 		} else if(javaType.isAssignableFrom(Boolean.class)){
-			object = Boolean.valueOf(record.value.toString());			
+			object = parseBoolean(record.value);			
+		} else if(javaType.isAssignableFrom(LocalDate.class)){
+			object = parseLocalDate(record.value);			
 		} else {
 			object = record.value.toString();			
 		}
@@ -195,11 +194,34 @@ public class QueryParser {
 		}
 	}
 	
-	protected String idsKey(Class<?> modelType){
+	protected String idsKey(final Class<?> modelType){
 		return "ids[]";
 	}
 	
-	protected String idKey(Class<?> modelType){
+	protected String idKey(final Class<?> modelType){
 		return "id";
+	}
+	
+	protected Boolean parseBoolean(final Object object){
+		return Boolean.valueOf(object.toString());
+	}
+	
+	protected LocalDate parseLocalDate(final Object object){
+		final String[] values = object.toString().split(dateSeparator());
+		return LocalDate.of(Integer.valueOf(values[0]), Integer.valueOf(values[1]), Integer.valueOf(values[2]));
+	}
+	
+	protected String dateFormat(){
+		return "yyyy-mm-dd";
+	}
+	
+	protected String dateSeparator(){
+		return "-";
+	}
+	
+	protected Enum<?> parseEnum(final Object object, @SuppressWarnings("rawtypes") final Class type){
+		@SuppressWarnings("unchecked")
+		final Object e = Enum.valueOf(type, object.toString());
+		return (Enum<?>) e;
 	}
 }

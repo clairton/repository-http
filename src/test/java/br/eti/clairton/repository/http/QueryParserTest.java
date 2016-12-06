@@ -3,8 +3,10 @@ package br.eti.clairton.repository.http;
 import static br.eti.clairton.repository.Order.Direction.ASC;
 import static br.eti.clairton.repository.Order.Direction.DESC;
 import static br.eti.clairton.repository.http.Aplicacao.Tipo.A;
+import static br.eti.clairton.repository.http.Aplicacao_.criadoEm;
 import static br.eti.clairton.repository.http.Aplicacao_.tipo;
 import static br.eti.clairton.repository.http.VRaptorRunner.navigate;
+import static java.time.LocalDate.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -145,5 +147,10 @@ public class QueryParserTest {
 	@Test
 	public void testWithEnum() {
 		assertEquals(A, queryParser.to(new Attribute<?, ?>[]{tipo}, "A").getValue());
+	}
+
+	@Test
+	public void testDate() {
+		assertEquals(of(2016, 06, 05), queryParser.to(new Attribute<?, ?>[]{criadoEm}, "2016-06-05").getValue());
 	}
 }
