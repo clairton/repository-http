@@ -29,7 +29,7 @@ import javax.persistence.metamodel.Type;
 
 import org.apache.logging.log4j.Logger;
 
-import br.eti.clairton.repository.AttributeBuilder;
+import br.eti.clairton.repository.http.AttributeBuilder;
 import br.eti.clairton.repository.Comparator;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Order.Direction;
@@ -49,9 +49,9 @@ public class QueryParser {
 	}
 
 	@Inject
-	public QueryParser(final AttributeBuilder attributeBuilder) {
+	public QueryParser(final AttributeBuilder builder) {
 		super();
-		this.builder = attributeBuilder;
+		this.builder = builder;
 	}
 
 	public Collection<Predicate> parse(final Map<String, String[]> params, final Class<?> modelType) {

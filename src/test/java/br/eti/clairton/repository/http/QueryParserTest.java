@@ -30,7 +30,8 @@ import br.eti.clairton.repository.Predicate;
 
 @RunWith(VRaptorRunner.class)
 public class QueryParserTest {
-	private @Inject QueryParser queryParser;
+	@Inject 
+	private QueryParser queryParser;
 
 	@Before
 	public void init() {

@@ -13,13 +13,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.metamodel.Metamodel;
 
-import net.vidageek.mirror.dsl.Mirror;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mockito.Mockito;
 
-import br.eti.clairton.repository.AttributeBuilder;
+import net.vidageek.mirror.dsl.Mirror;
 
 /**
  * Produz os recursos.
@@ -39,13 +37,10 @@ public class Resource {
 
 	private EntityManager em;
 
-	private AttributeBuilder attributeBuilder;
-
 	@PostConstruct
 	public void init() {
 		emf = Persistence.createEntityManagerFactory(UNIT_NAME);
 		em = emf.createEntityManager();
-		attributeBuilder = new AttributeBuilder(em);
 	}
 
 	@Produces
@@ -73,11 +68,6 @@ public class Resource {
 	@Produces
 	public Mirror getMirror() {
 		return mirror;
-	}
-
-	@Produces
-	public AttributeBuilder getAttributeBuilder() {
-		return attributeBuilder;
 	}
 
 	@Produces

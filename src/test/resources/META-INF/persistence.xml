@@ -7,6 +7,7 @@
 		<jta-data-source>java:/jdbc/datasources/DefaultDS</jta-data-source>
 		<class>br.eti.clairton.repository.http.Aplicacao</class>
 		<class>br.eti.clairton.repository.http.Recurso</class>
+		<class>br.eti.clairton.repository.http.Operacao</class>
 		<class>br.eti.clairton.repository.Model</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
