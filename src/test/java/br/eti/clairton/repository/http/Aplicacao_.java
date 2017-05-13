@@ -6,7 +6,7 @@ import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-import br.eti.clairton.repository.Model_;
+import br.eti.clairton.model.Model_;
 import br.eti.clairton.repository.http.Aplicacao.Tipo;
 
 @StaticMetamodel(Aplicacao.class)

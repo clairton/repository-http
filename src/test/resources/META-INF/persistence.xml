@@ -8,7 +8,7 @@
 		<class>br.eti.clairton.repository.http.Aplicacao</class>
 		<class>br.eti.clairton.repository.http.Recurso</class>
 		<class>br.eti.clairton.repository.http.Operacao</class>
-		<class>br.eti.clairton.repository.Model</class>
+		<class>br.eti.clairton.model.Model</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<!-- Hibernate Properties -->

@@ -1,4 +1,4 @@
-# repository-http[![Build Status](https://drone.io/github.com/clairton/repository-http/status.png)](https://drone.io/github.com/clairton/repository-http/latest)
+# repository-http [![Build Status](https://travis-ci.org/clairton/repository-http.svg?branch=master)](https://travis-ci.org/clairton/repository-http)
 
 Convert url para predicates de [Repository](https://github.com/clairton/repository).
 
@@ -61,26 +61,11 @@ PaginatedCollection<Aplicacao, Meta> collection = repository.from(modelType)
 
 Para usar será necessário adicionar os repositórios maven:
 
-```xml
-<repository>
-	<id>mvn-repo-releases</id>
-	<url>https://raw.github.com/clairton/mvn-repo/releases</url>
-</repository>
-<repository>
-	<id>mvn-repo-snapshot</id>
-	<url>https://raw.github.com/clairton/mvn-repo/snapshots</url>
-</repository>
-```
  Também adicionar as depêndencias:
 ```xml
 <dependency>
     <groupId>br.eti.clairton</groupId>
 	<artifactId>repository-http</artifactId>
-	<version>lastversion</version>
-</dependency>
-<dependency>
-    <groupId>br.eti.clairton</groupId>
-	<artifactId>repository</artifactId>
 	<version>lastversion</version>
 </dependency>
 ```

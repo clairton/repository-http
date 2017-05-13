@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Builder para facilidar o agrupamento de {@link Attribute}.
+ * Builder para facilidar o agrupamento de jpa Attribute.
  * 
- * @author Clairton Rodrigo Heinzen<clairton.rodrigo@gmail.com>
+ * @author Clairton Rodrigo Heinzen clairton.rodrigo@gmail.com
  */
 @Dependent
 public class AttributeBuilder {
@@ -40,7 +40,7 @@ public class AttributeBuilder {
 	 * Construtor com parametros.
 	 * 
 	 * @param attibute
-	 *            {@link Attribute}
+	 *            jpa Attribute
 	 */
 	public AttributeBuilder(final Attribute<?, ?> attibute) {
 		this.entityManager = null;
@@ -48,10 +48,10 @@ public class AttributeBuilder {
 	}
 
 	/**
-	 * Adiciona um {@link Attribute}
+	 * Adiciona um jpa Attribute
 	 * 
 	 * @param attibute
-	 *            {@link Attribute}
+	 *            jpa Attribute
 	 * @return this
 	 */
 	public AttributeBuilder add(final Attribute<?, ?> attibute) {

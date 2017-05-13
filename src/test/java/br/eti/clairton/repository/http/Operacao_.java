@@ -3,7 +3,7 @@ package br.eti.clairton.repository.http;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-import br.eti.clairton.repository.Model_;
+import br.eti.clairton.model.Model_;
 
 @StaticMetamodel(Operacao.class)
 public abstract class Operacao_ extends Model_ {
