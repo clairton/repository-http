@@ -2,17 +2,17 @@ package br.eti.clairton.repository.http;
 
 import static br.eti.clairton.repository.Comparators.EQUAL;
 import static br.eti.clairton.repository.Comparators.values;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Logger.getLogger;
 import static java.util.regex.Pattern.compile;
-import static org.apache.logging.log4j.LogManager.getLogger;
 
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import org.apache.logging.log4j.Logger;
 
 import br.eti.clairton.repository.Comparator;
 
 public class Record {
-	private static final Logger logger = getLogger(Record.class);
+	private static final Logger logger = getLogger(Record.class.getSimpleName());
 	public static final Pattern escaper = compile("([^a-zA-z0-9])");
 	public final Object value;
 	public final Comparator comparator;
@@ -35,7 +35,7 @@ public class Record {
 		for (final Comparator comparator : values()) {
 			final String expression = escaper.matcher(comparator.toString()).replaceAll("\\\\$1").replace("^", "\\^");
 			final String regex = "^" + expression + ".*";
-			logger.debug(regex);
+			logger.log(FINE, regex);
 			if (value.matches(regex)) {
 				return new Record(value.replaceAll(expression, ""), comparator);
 			}

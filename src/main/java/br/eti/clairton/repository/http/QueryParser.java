@@ -10,9 +10,10 @@ import static br.eti.clairton.repository.http.Param.PER_PAGE;
 import static br.eti.clairton.repository.http.Param.SORT;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.logging.Level.WARNING;
+import static java.util.logging.Logger.getLogger;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.apache.logging.log4j.LogManager.getLogger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -27,9 +29,6 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.Type;
 
-import org.apache.logging.log4j.Logger;
-
-import br.eti.clairton.repository.http.AttributeBuilder;
 import br.eti.clairton.repository.Comparator;
 import br.eti.clairton.repository.Order;
 import br.eti.clairton.repository.Order.Direction;
@@ -37,7 +36,7 @@ import br.eti.clairton.repository.Predicate;
 
 @Dependent
 public class QueryParser {
-	private static final Logger logger = getLogger(QueryParser.class);
+	private static final Logger logger = getLogger(QueryParser.class.getSimpleName());
 
 	private final List<String> query = asList(SORT, PAGE, PER_PAGE, DIRECTION);
 
@@ -76,7 +75,7 @@ public class QueryParser {
 			final Collection<Predicate> predicate;
 			final Attribute<?, ?>[] attrs = builder.with(modelType, field);
 			if (attrs.length == 1 && attrs[0] == null) {
-				logger.warn("Attribute {}#{} not found", modelType, field);
+				logger.log(WARNING, "Attribute {}#{} not found", new Object[]{modelType, field});
 				continue;
 			}
 			final String[] values = params.get(field);
