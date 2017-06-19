@@ -37,10 +37,10 @@ As operações lógicas disponíveis são:
 * ∃  Existe
 * ∅  Nulo
 * !∅ Não Nulo
-* >  Maior
-* >= Maior ou Igual
-* <  Menor
-* <= Menor ou Igual
+* &gt; Maior
+* &gt;= Maior ou Igual
+* &lt; Menor
+* &lt;= Menor ou Igual
 
 Para recuperar no lador do servidor:
 ```java
