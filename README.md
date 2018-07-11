@@ -10,6 +10,8 @@ http://meudominio.com/app/recurso?operacao.nome=abc //retornara o recurso com o 
 
 http://meudominio.com/app/recurso?operacao[nome]=abc //retornara o recurso com o nome da operacao igual a "abc"
 
+http://meudominio.com/app/recurso?nome[]=abc&nome[]=def //retornara o recurso com o nome igual a "abc" ou "def"
+
 http://meudominio.com/app/recurso?id=>=1&id=<=11 //retornara o recurso com o id entre 1 e 11
 
 http://meudominio.com/app/recurso?page=2&per_page=10 //retornara a segunda pagina com 10 itens
